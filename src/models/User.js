@@ -44,7 +44,7 @@ export default class User extends Model {
       },
       {
         sequelize,
-        tableName: 'Usuarios',
+        tableName: 'usuarios',
       },
     );
 
