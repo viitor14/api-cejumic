@@ -14,7 +14,7 @@ import beneficiarioRoutes from './routes/beneficiarioRoutes';
 import doacaoRoutes from './routes/doacaoRoutes';
 import voluntarioRoutes from './routes/voluntarioRoutes';
 
-const whiteList = ['http://localhost:3000', 'https://agenda-one-psi.vercel.app'];
+const whiteList = ['http://localhost:3000', 'https://cejumic.vercel.app'];
 
 const corsOptions = {
   origin(origin, callback) {
