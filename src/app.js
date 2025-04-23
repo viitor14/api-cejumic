@@ -13,6 +13,7 @@ import tokenRoutes from './routes/tokenRoutes';
 import beneficiarioRoutes from './routes/beneficiarioRoutes';
 import doacaoRoutes from './routes/doacaoRoutes';
 import voluntarioRoutes from './routes/voluntarioRoutes';
+import relatorioRoutes from './routes/relatorioRoutes';
 
 const whiteList = ['http://localhost:3000', 'https://cejumic.vercel.app'];
 
@@ -46,6 +47,7 @@ class App {
     this.app.use('/voluntario', voluntarioRoutes);
     this.app.use('/users/', userRoutes);
     this.app.use('/tokens/', tokenRoutes);
+    this.app.use('/relatorio/', relatorioRoutes);
   }
 }
 

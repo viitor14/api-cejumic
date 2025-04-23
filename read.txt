@@ -1,0 +1,72 @@
+import { HfInference } from '@huggingface/inference';
+import Beneficiario from '../models/Beneficiario';
+
+const hf = new HfInference(process.env.HUGGINGFACE_API_KEY);
+
+class RelatorioController {
+  async gerarRelatorio(req, res) {
+    const beneficiarios = await Beneficiario.findAll({
+      attributes: [
+        'nome',
+        'cpf',
+        'dataNascimento',
+        'endereco',
+        'bairro',
+        'cep',
+        'cidade',
+        'estado',
+        'status',
+        'created_at',
+        'id',
+      ],
+    });
+
+    const prompt = `
+      Com base nos dados abaixo, gere um relatório detalhado dos beneficiários.
+
+      DADOS DOS BENEFICIÁRIOS:
+      ${JSON.stringify(beneficiarios)}
+
+      O relatório deve incluir:
+      1. Total de Beneficiários
+      2. Beneficiários por Status (Ativos e Inativos)
+      3. Beneficiários por Cidade
+      4. Dados de cada beneficiário com o nome, CPF, cidade e status.
+    `;
+
+    try {
+      const response = await hf.chatCompletion({
+        model: 'mistralai/Mixtral-8x7B-Instruct-v0.1',
+        messages: [
+          {
+            role: 'system',
+            content:
+              'Você é um assistente que gera relatórios para ONGs com base em dados fornecidos.',
+          },
+          {
+            role: 'user',
+            content: prompt,
+          },
+        ],
+        parameters: {
+          max_new_tokens: 500,
+          temperature: 0.7,
+        },
+      });
+
+      // Organiza a resposta da IA para retirar os '\n' e formatar adequadamente
+      const resultado = response.choices[0].message.content;
+
+      // Remover quebras de linha indesejadas, transformando-as em HTML ou estrutura organizada
+      const resultadoOrganizado = resultado.replace(/\n/g, '<br/>');
+
+      // Retornar o resultado organizado no formato JSON
+      res.json({ resposta: resultadoOrganizado });
+    } catch (error) {
+      console.error('Erro ao gerar relatório:', error);
+      res.status(500).json({ erro: 'Erro ao gerar relatório.' });
+    }
+  }
+}
+
+export default new RelatorioController();
