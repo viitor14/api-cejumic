@@ -12,7 +12,33 @@ class BeneficiarioController {
     }
   }
 
-  async index(req, res) {
+  async Active(req, res) {
+    try {
+      const beneficiarios = await Beneficiario.findAll({
+        attributes: [
+          'nome',
+          'cpf',
+          'dataNascimento',
+          'endereco',
+          'bairro',
+          'cep',
+          'cidade',
+          'estado',
+          'status',
+          'created_at',
+          'id',
+        ],
+        where: { status: 'ativo' },
+      });
+      return res.json(beneficiarios);
+    } catch (e) {
+      return res.status(400).json({
+        errors: e.errors.map((err) => err.message),
+      });
+    }
+  }
+
+  async All(req, res) {
     try {
       const beneficiarios = await Beneficiario.findAll({
         attributes: [
