@@ -28,7 +28,7 @@ class BeneficiarioController {
           'created_at',
           'id',
         ],
-        where: { status: 'ativo' },
+        where: { status: 'Ativo' },
       });
       return res.json(beneficiarios);
     } catch (e) {
